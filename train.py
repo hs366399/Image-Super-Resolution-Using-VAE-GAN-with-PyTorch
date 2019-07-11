@@ -25,23 +25,6 @@ data_path = {'train' : "data/train/", 'test' : "data/test/"}
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 
-def get_accuracy(output, label, batch_size):
-    
-    label = label.detach().cpu().numpy().squeeze()
-    output = output.detach().cpu()
-    _, indices = torch.max(output, dim=1)
-    output = torch.zeros_like(output)
-    itr = iter(indices)
-    for i in range(output.shape[0]):
-        output[i, int(next(itr))] = 1
-    
-    label = torch.tensor(np.eye(10)[label]).float()
-    diff = torch.sum(torch.abs(output - label))/(2*output.shape[0])
-    acc = 100 - (100 * diff)
-    
-    return acc
-
-
 transform_img = transforms.Compose([transforms.ToTensor(),
                     transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225]),]
                   )
